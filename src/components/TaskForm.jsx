@@ -86,7 +86,6 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         <select
           name="status"
           value={formData.status}
-          onChange={handleChange}
           className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="backlog" defaultValue aria-readonly disabled>
@@ -95,19 +94,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         </select>
       </div>
 
-      {/*  <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Project ID
-        </label>
-        <input
-          type="number"
-          name="project"
-          value={formData.project}
-          onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          required
-        />
-      </div> */}
+
 
       {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
