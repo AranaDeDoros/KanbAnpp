@@ -11,6 +11,29 @@ export default function KanbanBoard({ user, projectId }) {
   const { data: tasks, isLoading } = useTasks(projectId, token);
   const [showCreateForm, setshowCreateForm] = useState(false);
 
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8000/ws/tasks/");
+
+    socket.onmessage = (event) => {
+      const updatedTask = JSON.parse(event.data);
+      console.log("📩 Task update received:", updatedTask);
+
+      // Actualiza el estado local según corresponda
+      setColumns((prev) => {
+        const newCols = { ...prev };
+        // Remover tarea de columnas antiguas y agregar a la nueva
+        Object.keys(newCols).forEach((key) => {
+          newCols[key] = newCols[key].filter((t) => t.id !== updatedTask.id);
+        });
+        newCols[updatedTask.status].push(updatedTask);
+        return newCols;
+      });
+    };
+
+    socket.onclose = () => console.log("Socket closed");
+    return () => socket.close();
+  }, []);
+
   const handleTaskCreated = (newTask) => {
     console.log("Task created:", newTask);
     setColumns({
