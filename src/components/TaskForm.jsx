@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useCreateTask } from "../api/useCreateTask";
+import {CriteriaList} from "./CriteriaList"
+
 
 export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const defaultObj = {
@@ -12,6 +14,12 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { mutate: createTask, isPending } = useCreateTask(token);
+
+   const [criteriaList, setCriteriaList] = useState([]);
+   const handleCriteriaText = (items) => {
+     setCriteriaList(items);
+     console.log(items.map((c) => c.value).join("\n"));
+   };
 
   useEffect(() => {
     if (projectId) {
@@ -40,12 +48,13 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           description: "",
           status: "backlog",
           project: projectId,
+          estimate_points: 1,
+          priority: "regular",
         });
       },
       onError: () => setError("Error creating task"),
     });
   };
-
 
   return (
     <form
@@ -53,7 +62,6 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       className="bg-white shadow-md rounded-lg p-6 w-full max-w-md mx-auto"
     >
       <h2 className="text-xl font-semibold mb-4 text-gray-800">Create Task</h2>
-
       <div className="mb-3">
         <label className="block text-sm font-medium text-gray-700">Title</label>
         <input
@@ -65,7 +73,6 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           required
         />
       </div>
-
       <div className="mb-3">
         <label className="block text-sm font-medium text-gray-700">
           Description
@@ -78,26 +85,70 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
-
       <div className="mb-3">
         <label className="block text-sm font-medium text-gray-700">
           Status
         </label>
         <select
           name="status"
-          value={formData.status}
+          disabled
+          defaultValue={formData.status}
           className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="backlog" defaultValue aria-readonly disabled>
+          {/* <option value="">Select a status</option> */}
+          <option value="backlog" defaultValue aria-readonly>
             Backlog
           </option>
         </select>
       </div>
 
+      <div className="mb-3">
+        <CriteriaList onChange={handleCriteriaText} />
+        <ol>
+          {criteriaList.map((c, idx) => {
+            return <li key={idx}>{c.value}</li>;
+          })}
+        </ol>
+      </div>
 
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="mb-3">
+          <label className="block text-sm font-medium text-gray-700">
+            Estimate
+          </label>
+          <input
+            type="number"
+            max={10}
+            name="estimate"
+            value={formData.estimate}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2
+                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="block text-sm font-medium text-gray-700">
+            Priority
+          </label>
+          <select
+            name="priority"
+            value={formData.priority}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2
+                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            required
+          >
+            <option value="">Select priority</option>
+            <option value="low">Low</option>
+            <option value="regular">Regular</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
 
       {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-
       <button
         type="submit"
         disabled={loading}
