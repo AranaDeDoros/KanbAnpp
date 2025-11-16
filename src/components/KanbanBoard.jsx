@@ -160,56 +160,57 @@ export default function KanbanBoard({ user, projectId }) {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             ref={provided.innerRef}
-                            className="bg-gray-100 rounded p-2 hover:shadow-sm transition"
+                            className="bg-white rounded-lg border shadow-sm hover:shadow-md transition p-0"
                           >
                             <div
                               className={`${
                                 task.status === "done"
-                                  ? "bg-green-500"
+                                  ? "bg-green-600"
                                   : task.status === "wip"
                                   ? "bg-orange-500"
-                                  : "bg-blue-500"
-                              } text-white rounded-t p-1`}
+                                  : "bg-blue-600"
+                              } text-white rounded-t-md px-3 py-2 flex justify-between items-center`}
                             >
-                              <strong>{task.title}</strong>
+                              <strong className="text-sm">{task.title}</strong>
+
+                              <div>
+                                {task.priority === "low" ? (
+                                  <ArrowDownCircleIcon className="size-5 text-white" />
+                                ) : task.priority === "regular" ? (
+                                  <ExclamationCircleIcon className="size-5 text-white" />
+                                ) : (
+                                  <FireIcon className="size-5 text-white" />
+                                )}
+                              </div>
                             </div>
 
-                            <div className="bg-gray-500 text-white  p-1 text-sm ">
-                              <i>{task.description}</i>
+                            <div className="px-3 py-2 text-gray-700 text-sm border-t bg-gray-50">
+                              {task.description ? (
+                                <p className="leading-tight">
+                                  {task.description}
+                                </p>
+                              ) : (
+                                <p className="italic text-gray-400">
+                                  No description
+                                </p>
+                              )}
                             </div>
 
                             <div
                               className={`${
                                 task.status === "done"
-                                  ? "bg-green-500"
+                                  ? "bg-green-50"
                                   : task.status === "wip"
-                                  ? "bg-orange-500"
-                                  : "bg-blue-500"
-                              } text-white rounded-b p-1 mb-1 text-right`}
+                                  ? "bg-orange-50"
+                                  : "bg-blue-50"
+                              } px-3 py-2 rounded-b-md border-t flex justify-end`}
                             >
-                              <div className="flex justify-between">
-                                <div>
-                                  <span>
-                                    {task.priority == "low" ? (
-                                      <ArrowDownCircleIcon className="size-5 text-white-500 inline-block mr-1" />
-                                    ) : task.priority == "regular" ? (
-                                      <ExclamationCircleIcon className="size-5 text-white-500 inline-block mr-1" />
-                                    ) : (
-                                      <FireIcon className="size-5 text-white-500 inline-block mr-1" />
-                                    )}
-                                  </span>
-                                </div>
-                                <div>
-                                  <span>
-                                    <UserIcon className="size-5 text-white-500 inline-block mr-1" />
-                                    {task.status !== "backlog" ? (
-                                      <span>{user.username}</span>
-                                    ) : (
-                                      <span>NA</span>
-                                    )}
-                                  </span>
-                                </div>
-                              </div>
+                              <span className="flex items-center gap-1 text-gray-700 text-sm">
+                                <UserIcon className="size-4 text-gray-600" />
+                                {task.status !== "backlog"
+                                  ? user.username
+                                  : "NA"}
+                              </span>
                             </div>
                           </div>
                         )}
