@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import KanbanBoard from "../components/KanbanBoard";
 import { useProjects } from "../api/useProjects";
 import { useUser } from "../api/useUser";

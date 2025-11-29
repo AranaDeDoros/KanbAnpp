@@ -1,21 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "./client";
 
-export const useCreateTask = (token) => {
+export const useCreateProject = (token) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (projectDTO) => {
       const res = await api.post(
-        "/tasks/",
+        "/projects/",
         {
-          title: projectDTO.title,
+          name: projectDTO.name,
           description: projectDTO.description,
-          status: projectDTO.status,
-          project: projectDTO.project,
-          estimate_points: projectDTO.estimate_points,
-          priority: projectDTO.priority,
-          acceptance_criteria: projectDTO.acceptance_criteria,
+          members: [1],  // Temporary hardcoded member ID
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -24,7 +20,7 @@ export const useCreateTask = (token) => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["tasks"]);
+      queryClient.invalidateQueries(["projects"]);
     },
   });
 };

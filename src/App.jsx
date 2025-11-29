@@ -1,12 +1,11 @@
-import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import LoginPage from "./pages/LoginPage";
-import AccountsPage from "./pages/AccountsPage";
 import { TokenContext } from "./context/TokenContext";
 import { useToken } from "./api/useToken";
+import CreateProjectPage from "./pages/CreateProjectPage";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +22,6 @@ function AppContent() {
     if (error) return <p>Failed to load token</p>;
   }
 
-
   return (
     <div className="p-6">
       <Routes>
@@ -38,6 +36,17 @@ function AppContent() {
             </TokenContext.Provider>
           }
         />
+
+        <Route
+          path="/tasks/new"
+          element={
+            <TokenContext.Provider value={token}>
+              <CreateProjectPage />
+            </TokenContext.Provider>
+          }
+        />
+        <Route path="/projects/new" element={<b>add project</b>} />
+
         <Route
           path="*"
           element={
