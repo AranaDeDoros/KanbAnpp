@@ -247,16 +247,26 @@ export default function KanbanBoard({ user, projectId }) {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                               ref={provided.innerRef}
-                              className="bg-white rounded-lg border shadow-sm hover:shadow-md transition p-0"
+                              className="
+                                rounded-xl overflow-hidden
+                                shadow-md hover:shadow-lg
+                                transition-all duration-200
+                                border border-gray-200
+                                bg-white
+                              "
                             >
                               <div
-                                className={`${
-                                  task.status === "done"
-                                    ? "bg-green-600"
-                                    : task.status === "wip"
-                                    ? "bg-orange-500"
-                                    : "bg-blue-600"
-                                } text-white rounded-t-md px-3 py-2 flex justify-between items-center`}
+                                className={`
+                                  px-3 py-2 flex justify-between items-center text-white
+                                  bg-gradient-to-r
+                                  ${
+                                    task.status === "done"
+                                      ? "from-green-500 to-green-600"
+                                      : task.status === "wip"
+                                      ? "from-orange-400 to-orange-500"
+                                      : "from-blue-500 to-blue-600"
+                                  }
+                                `}
                               >
                                 <strong className="text-sm">
                                   {task.title}
