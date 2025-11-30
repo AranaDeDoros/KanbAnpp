@@ -50,9 +50,9 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       formData.acceptance_criteria = criteriaList
         .map((c) => c.value)
         .join("\n");
-    } else if(criteriaList.length < 1){
-      console.log(criteriaList)
-      setError("Must add at least one criteria")
+    } else if (criteriaList.length < 1) {
+      console.log(criteriaList);
+      setError("Must add at least one criteria");
       setLoading(false);
       return;
     }
@@ -104,21 +104,21 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         <label className="block text-sm font-medium text-gray-700">
           Description
         </label>
-        {/* <textarea
+        <textarea
           name="description"
           value={formData.description}
           onChange={handleChange}
           rows="3"
           className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue"
-        /> */}
-        <div className="mb-2 max-h-40 overflow-y-auto">
+        />
+        {/* <div className="mb-2 max-h-40 overflow-y-auto">
           <RichText
             value={formData.description}
             onChange={(html) =>
               setFormData((prev) => ({ ...prev, description: html }))
             }
           />
-        </div>
+        </div> */}
       </div>
       <div className="mb-1">
         <label className="block text-sm font-medium text-gray-700">
@@ -187,7 +187,11 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700 transition"
+        className="text-lg w-full py-2 rounded-md font-semibold text-white
+                    bg-gradient-to-r from-sky-600 to-sky-800
+                    hover:from-sky-600 hover:to-sky-600
+                    transition-all shadow-md hover:shadow-lg
+                    active:scale-[0.98]"
       >
         {loading ? "Creating..." : "Create Task"}
       </button>

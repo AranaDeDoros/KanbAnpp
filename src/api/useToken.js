@@ -1,4 +1,3 @@
-// src/api/useToken.js
 import { useQuery } from "@tanstack/react-query";
 import api from "./client";
 

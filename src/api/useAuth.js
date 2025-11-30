@@ -19,7 +19,6 @@ export const useAuth = () => {
       return res.data;
     },
     onSuccess: () => {
-      // Opcional: refresca las tareas después de crear una
       queryClient.invalidateQueries(["tasks"]);
     },
   });

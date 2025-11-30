@@ -1,26 +1,18 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import LoginPage from "./pages/LoginPage";
-import { TokenContext } from "./context/TokenContext";
-import { useToken } from "./api/useToken";
+import {TokenProvider } from "./context/TokenProvider";
 import CreateProjectPage from "./pages/CreateProjectPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Navbar } from "./components/Navbar";
 
 const queryClient = new QueryClient();
 
 function AppContent() {
   console.log("AppContent mounted");
-  const location = useLocation();
-  const isLoginPage = location.pathname === "/";
 
-  const { data, isLoading, error } = useToken();
-  const token = !isLoginPage ? data?.access : null;
-
-  if (!isLoginPage) {
-    if (isLoading) return <p>Loading token...</p>;
-    if (error) return <p>Failed to load token</p>;
-  }
 
   return (
     <div className="p-6">
@@ -31,27 +23,27 @@ function AppContent() {
         <Route
           path="/projects"
           element={
-            <TokenContext.Provider value={token}>
+            <ProtectedRoute>
               <ProjectsPage />
-            </TokenContext.Provider>
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/projects/new"
           element={
-            <TokenContext.Provider value={token}>
+            <ProtectedRoute>
               <CreateProjectPage />
-            </TokenContext.Provider>
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="*"
           element={
-            <TokenContext.Provider value={token}>
+            <ProtectedRoute>
               <NotFoundPage />
-            </TokenContext.Provider>
+            </ProtectedRoute>
           }
         />
       </Routes>
@@ -63,7 +55,10 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AppContent />
+        <TokenProvider>
+          <Navbar />
+          <AppContent />
+        </TokenProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

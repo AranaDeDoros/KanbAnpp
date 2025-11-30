@@ -2,10 +2,10 @@ import { useState } from "react";
 import KanbanBoard from "../components/KanbanBoard";
 import { useProjects } from "../api/useProjects";
 import { useUser } from "../api/useUser";
-import { useTokenContext } from "../context/TokenContext";
+import {useTokenContext} from "../hooks/useTokenContext";
 
 export default function ProjectsPage() {
-  const token = useTokenContext();
+  const {token} = useTokenContext();
   const { data: projects } = useProjects(token);
   const { data: user } = useUser(token);
   const [selectedProject, setSelectedProject] = useState(null);

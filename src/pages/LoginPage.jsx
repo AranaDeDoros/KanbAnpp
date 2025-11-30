@@ -30,7 +30,7 @@ export default function LoginPage() {
       },
       {
         onSuccess: (auth) => {
-          console.log("auth -> " + auth);
+          console.log("auth -> " + JSON.stringify(auth));
           localStorage.setItem("token", auth.access);
           localStorage.setItem("refresh", auth.refresh);
           setLoading(false);
@@ -66,6 +66,7 @@ export default function LoginPage() {
             name="username"
             value={username}
             onChange={handleUsername}
+            autoComplete="username"
             className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           />
@@ -79,6 +80,7 @@ export default function LoginPage() {
             name="password"
             value={password}
             onChange={handlePassword}
+            autoComplete="current-password"
             className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           />

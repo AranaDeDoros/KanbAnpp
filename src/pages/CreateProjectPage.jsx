@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useTokenContext } from "../context/TokenContext";
+import {useTokenContext} from "../hooks/useTokenContext";
 import { useUser } from "../api/useUser";
 import { useCreateProject } from "../api/useCreateProject";
 import Toast from "../components/Toast";
@@ -11,7 +11,7 @@ export default function CreateProjectPage() {
     members: [],
   };
 
-  const token = useTokenContext();
+  const {token} = useTokenContext();
   const { data: user } = useUser(token);
   const [owner, setOwner] = useState(null);
   const [formData, setFormData] = useState(defaultObj);

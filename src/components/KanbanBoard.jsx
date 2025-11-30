@@ -1,12 +1,8 @@
 import  { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useTasks } from "../api/useTasks";
-import { useTokenContext } from "../context/TokenContext";
+import {useTokenContext} from "../hooks/useTokenContext";
 import { CreateTaskForm } from "./TaskForm";
-/* import { UserIcon } from "@heroicons/react/24/solid";
-import { FireIcon } from "@heroicons/react/24/solid";
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { ArrowDownCircleIcon } from "@heroicons/react/24/solid"; */
 import { useNavigate } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -14,7 +10,7 @@ import api from "../api/client";
 import { Task } from "./Task";
 
 export default function KanbanBoard({ user, projectId }) {
-  const token = useTokenContext();
+  const {token} = useTokenContext();
   const { data: tasks, isLoading } = useTasks(projectId, token);
   const [showCreateForm, setshowCreateForm] = useState(false);
   const navigate = useNavigate();
@@ -176,14 +172,14 @@ export default function KanbanBoard({ user, projectId }) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg rounded-xl bg-white p-4 shadow-xl">
-                <div className="flex justify-between items-center mb-4">
+              <Dialog.Panel className="w-full max-w-lg rounded-xl bg-white pb-4 shadow-xl">
+                <div className="flex justify-between items-center mb-4  bg-sky-600 text-white px-3 py-2 rounded-md w-full">
                   <Dialog.Title className="text-lg font-semibold">
                     Create Task
                   </Dialog.Title>
 
                   <button
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-white-500 hover:text-sky-300"
                     onClick={() => setshowCreateForm(false)}
                   >
                     ✕
@@ -257,8 +253,12 @@ export default function KanbanBoard({ user, projectId }) {
                               "
                             >
                               {/* task */}
-                              <Task task={task} user={user} stripHtml={stripHtml} />
-                          {/*     <div
+                              <Task
+                                task={task}
+                                user={user}
+                                stripHtml={stripHtml}
+                              />
+                              {/*     <div
                                 className={`
                                   px-3 py-2 flex justify-between items-center text-white
                                   bg-gradient-to-r

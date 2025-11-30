@@ -1,6 +1,3 @@
-
-import { createContext, useContext } from "react";
+import { createContext} from "react";
 
 export const TokenContext = createContext(null);
-
-export const useTokenContext = () => useContext(TokenContext);
