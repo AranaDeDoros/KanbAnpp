@@ -4,7 +4,7 @@ import { TokenContext } from "./TokenContext";
 export function TokenProvider({ children }) {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
-  const appName = "KanbanProto";
+  const appName = "KanbAnpp";
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
