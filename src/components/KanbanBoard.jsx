@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useTasks } from "../api/useTasks";
 import { useTokenContext } from "../hooks/useTokenContext";
 import { CreateTaskForm } from "./TaskForm";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import api from "../api/client";
@@ -14,7 +14,7 @@ export default function KanbanBoard({ user, projectId }) {
   const { token } = useTokenContext();
   const { data: tasks, isLoading } = useTasks(projectId, token);
   const [showCreateForm, setshowCreateForm] = useState(false);
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const [status, setStatus] = useState("connecting");
   const [search, setSearch] = useState({ backlog: "", wip: "", done: "" });
 
@@ -67,6 +67,10 @@ export default function KanbanBoard({ user, projectId }) {
     localStorage.removeItem("refresh");
     navigate("/login");
   }; */
+
+  const goToCreateProject = () => {
+    navigate("/projects/new");
+  };
 
   useEffect(() => {
     if (tasks) {
@@ -142,6 +146,17 @@ export default function KanbanBoard({ user, projectId }) {
           <PlusIcon className="size-5 inline-block mr-1" />
           task
           {/* add task */}
+        </button>
+        <button
+          onClick={goToCreateProject}
+          className="px-3 py-1 rounded bg-indigo-600 rounded-md font-semibold text-white
+                    bg-gradient-to-r from-indigo-500 to-cyan-500
+                    hover:from-indigo-600 hover:to-cyan-600
+                    transition-all shadow-md hover:shadow-lg
+                    active:scale-[0.98]"
+        >
+          <PlusIcon className="size-5 inline-block mr-1" />
+          project
         </button>
         {/* <button
           onClick={logout}
@@ -275,7 +290,7 @@ export default function KanbanBoard({ user, projectId }) {
                               {/* task */}
                               <Task
                                 task={task}
-                                user={user}
+                                user={task.assigned_to}
                                 stripHtml={stripHtml}
                               />
                               {/*     <div

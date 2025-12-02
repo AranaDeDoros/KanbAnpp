@@ -1,4 +1,4 @@
-import { UserIcon } from "@heroicons/react/24/solid";
+import { CogIcon, UserIcon } from "@heroicons/react/24/solid";
 import { FireIcon } from "@heroicons/react/24/solid";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { ArrowDownCircleIcon } from "@heroicons/react/24/solid";
@@ -52,6 +52,10 @@ export const Task = ({ user, task, stripHtml }) => {
             : "bg-blue-50"
         } px-3 py-2 rounded-b-md border-t flex justify-end`}
       >
+      {/*   <span className="flex items-center gap-1 text-gray-700 text-sm">
+          <CogIcon className="size-4 text-gray-600" />
+          {task.estimate_points}
+        </span> */}
         <span className="flex items-center gap-1 text-gray-700 text-sm">
           <UserIcon className="size-4 text-gray-600" />
           {task.status !== "backlog" ? user.username : "NA"}
