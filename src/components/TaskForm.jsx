@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useCreateTask } from "../api/useCreateTask";
 import { CriteriaList } from "./CriteriaList";
 import RichText from "./RichText";
+import { useUsers } from "../api/useUsers";
+import MembersSingleSelect from "../components/SingleSelect";
 
 export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const defaultObj = {
@@ -12,12 +14,15 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     estimate_points: 1,
     priority: "regular",
     acceptance_criteria: "",
+    assigned_to: null,
   };
   const [formData, setFormData] = useState(defaultObj);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { mutate: createTask } = useCreateTask(token);
   const [criteriaResetKey, setCriteriaResetKey] = useState(0);
+  const { data: users, isLoading } = useUsers(token);
+  const [assignedTo, setAssignedTo] = useState([]);
 
   const [criteriaList, setCriteriaList] = useState([]);
   const handleCriteriaText = (items) => {
@@ -57,18 +62,13 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       return;
     }
 
+    console.log("Submitting form data:", formData);
+    console.log("FORM BEFORE SUBMIT:", JSON.stringify(formData, null, 2));
+
     createTask(formData, {
       onSuccess: (newTask) => {
         onTaskCreated?.(newTask);
-        setFormData({
-          title: "",
-          description: "",
-          status: "backlog",
-          project: projectId,
-          estimate_points: 1,
-          priority: "regular",
-          acceptance_criteria: "",
-        });
+        setFormData(defaultObj);
       },
       onError: () => setError("Error creating task"),
       onSettled: () => {
@@ -81,6 +81,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const handleReset = () => {
     setCriteriaResetKey((prev) => prev + 1);
     setCriteriaList([]);
+    setAssignedTo(null);
     setFormData(defaultObj);
   };
 
@@ -128,7 +129,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           name="status"
           disabled
           defaultValue={formData.status}
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 "
+          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed "
         >
           {/* <option value="">Select a status</option> */}
           <option value="backlog" defaultValue aria-readonly>
@@ -184,6 +185,26 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       </div>
 
       {error && <p className="text-red-500 text-sm mb-1">{error}</p>}
+
+      <div className="mb-1">
+        <label className="block text-sm font-medium text-gray-700">
+          Members
+        </label>
+        <MembersSingleSelect
+          users={users}
+          isLoading={isLoading}
+          value={assignedTo}
+          onChange={(value) => {
+            console.log(value);
+            setAssignedTo(value);
+            setFormData((prev) => ({
+              ...prev,
+              assigned_to: Number(value?.value) || null,
+            }));
+          }}
+        />
+      </div>
+
       <button
         type="submit"
         disabled={loading}

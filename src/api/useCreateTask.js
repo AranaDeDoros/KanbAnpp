@@ -16,6 +16,7 @@ export const useCreateTask = (token) => {
           estimate_points: projectDTO.estimate_points,
           priority: projectDTO.priority,
           acceptance_criteria: projectDTO.acceptance_criteria,
+          assigned_to: projectDTO.assigned_to,
         },
         {
           headers: { Authorization: `Bearer ${token}` },

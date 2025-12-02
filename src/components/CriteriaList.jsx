@@ -54,7 +54,7 @@ export const CriteriaList = ({ onChange }) => {
           <label className="block text-sm font-medium text-gray-700">
             Criteria:
           </label>
-          <button onClick={handleCreate}>
+          <button type="button" onClick={handleCreate}>
             <PlusIcon className="size-4 text-red-500 inline-block mr-1" />
           </button>
         </div>
@@ -71,7 +71,7 @@ export const CriteriaList = ({ onChange }) => {
                 className="flex-1 border border-gray-300 rounded p-2
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
-              <button onClick={() => handleDelete(item.id)}>
+              <button type="button" onClick={() => handleDelete(item.id)}>
                 <MinusIcon className="size-5 text-red-500" />
               </button>
             </div>
