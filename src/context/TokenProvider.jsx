@@ -10,13 +10,14 @@ export function TokenProvider({ children }) {
     const savedToken = localStorage.getItem("token");
     if (savedToken) {
       setToken(savedToken);
-      setLoading(false);
     }
+    setLoading(false);
   }, []);
 
   const login = (newToken) => {
     setToken(newToken);
     localStorage.setItem("token", newToken);
+    setLoading(false);
   };
 
   const logout = () => {
