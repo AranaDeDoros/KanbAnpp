@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useAuth } from "../api/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useTokenContext } from "../hooks/useTokenContext";
@@ -14,6 +14,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { mutate: auth } = useAuth();
   const [showToast, setShowToast] = useState(false);
+  const handleToastClose = useCallback(() => setShowToast(false), []);
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
@@ -41,10 +42,9 @@ export default function LoginPage() {
           navigate("/projects");
         },
         onError: () => {
-          setError("Login error");
+          setError("Login error. Please check your credentials.");
           setLoading(false);
           setShowToast(true);
-          setTimeout(() => setShowToast(false), 2500);
         },
       }
     );
@@ -96,7 +96,6 @@ export default function LoginPage() {
               />
             </div>
           </div>
-          {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
           <button
             type="submit"
             disabled={loading}
@@ -114,10 +113,12 @@ export default function LoginPage() {
         </form>
       </div>
       <Toast
+        key={showToast ? "toast-visible" : "toast-hidden"}
         show={showToast}
-        onClose={() => setShowToast(false)}
-        message="Login error. Please check your credentials."
+        onClose={handleToastClose}
+        message={error}
         duration={2500}
+        type="error"
       />
     </>
   );

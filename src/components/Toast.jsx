@@ -37,7 +37,7 @@ export default function Toast({
                         bg-gray-200
                         text-black/50 font-medium text-sm"
         >
-          {type == "succes" ? (
+          {type == "success" ? (
             <CheckCircleIcon className="w-6 h-6 text-gray-500" />
           ) : (
             <XMarkIcon className="w-6 h-6 text-red-500" />
