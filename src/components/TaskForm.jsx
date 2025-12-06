@@ -4,6 +4,7 @@ import { CriteriaList } from "./CriteriaList";
 import RichText from "./RichText";
 import { useUsers } from "../api/useUsers";
 import MembersSingleSelect from "../components/SingleSelect";
+import { PaperClipIcon } from "@heroicons/react/24/solid";
 
 export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const defaultObj = {
@@ -14,6 +15,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     estimate_points: 1,
     priority: "regular",
     acceptance_criteria: "",
+    attachments: [], // not stored yet in backend
     assigned_to: null,
   };
   const [formData, setFormData] = useState(defaultObj);
@@ -200,6 +202,43 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
             setFormData((prev) => ({
               ...prev,
               assigned_to: Number(value?.value) || null,
+            }));
+          }}
+        />
+      </div>
+
+      <div className="mb-1">
+        <label className="block text-sm font-medium text-gray-700">
+          Attachments
+        </label>
+        <label
+          htmlFor="file_attachments"
+          className="mt-1 flex items-center justify-between
+               w-full cursor-pointer border border-gray-300 rounded-md
+               p-2 bg-white hover:bg-gray-100 transition-all shadow-sm"
+        >
+          <span className="text-gray-700">
+            <PaperClipIcon className="size-5 text-gray-600" />
+            Upload files
+          </span>
+          <span className="text-gray-500 text-sm">
+            {formData?.attachments?.length
+              ? `${formData.attachments.length} files selected`
+              : "No files selected"}
+          </span>
+        </label>
+
+        <input
+          type="file"
+          multiple
+          accept=".pdf, .docx, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          id="file_attachments"
+          className="hidden"
+          onChange={(e) => {
+            const files = Array.from(e.target.files);
+            setFormData((prev) => ({
+              ...prev,
+              attachments: files,
             }));
           }}
         />
