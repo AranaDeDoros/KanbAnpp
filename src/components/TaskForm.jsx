@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCreateTask } from "../api/useCreateTask";
 import { CriteriaList } from "./CriteriaList";
-import RichText from "./RichText";
+//import RichText from "./RichText";
 import { useUsers } from "../api/useUsers";
 import MembersSingleSelect from "../components/SingleSelect";
 import { PaperClipIcon } from "@heroicons/react/24/solid";
@@ -91,6 +91,8 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     <form
       onSubmit={handleSubmit}
       className="rounded-lg px-6 w-full max-w-md mx-auto"
+      method="POST"
+      encType="multipart/form-data"
     >
       <div className="mb-1">
         <label className="block text-sm font-medium text-gray-700">Title</label>

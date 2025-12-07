@@ -2,7 +2,6 @@ import {
   CalculatorIcon,
   UserIcon,
   FireIcon,
-  ExclamationCircleIcon,
   ArrowDownCircleIcon,
   ListBulletIcon,
   TagIcon,
@@ -78,7 +77,7 @@ export const Task = ({ user, task, stripHtml }) => {
         >
           <span className="flex items-center gap-1 text-gray-700 text-sm">
             <UserIcon className="size-4 text-gray-600" />
-            {user.username ? user.username : "NA"}
+            {user?.username ? user.username : "NA"}
           </span>
         </div>
       </div>
@@ -94,7 +93,9 @@ export const Task = ({ user, task, stripHtml }) => {
             <DialogPanel className="mx-auto w-full max-w-lg rounded-xl bg-white p-5 shadow-xl">
               <DialogTitle className="text-lg font-semibold mb-3 flex justify-between">
                 <div class="flex gap-2 align-center justify-center items-center">
-                  <CheckBadgeIcon className="size-6 ml-2 text-green-500" />
+                  {task.status === "done" && (
+                    <CheckBadgeIcon className="size-6 text-green-500" />
+                  )}
                   <span>{task.title}</span>
                 </div>
                 <button
@@ -158,7 +159,9 @@ export const Task = ({ user, task, stripHtml }) => {
                 <div className="flex items-center gap-2 text-sm">
                   <PaperClipIcon className="size-5 text-gray-600" />
                   <strong>Attachments</strong>
-                  <a href="#" className="lowercase text-blue-600">template_test_file.pdf</a>
+                  <a href="#" className="lowercase text-blue-600">
+                    template_test_file.pdf
+                  </a>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm ">
