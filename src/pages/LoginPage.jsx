@@ -4,17 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { useTokenContext } from "../hooks/useTokenContext";
 import { KeyIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import Toast from "../components/Toast";
+import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { login } = useTokenContext();
+  const [loadingMessage, setLoadingMessage] = useState(false);
+  const { token, loading, login } = useTokenContext();
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { mutate: auth } = useAuth();
   const [showToast, setShowToast] = useState(false);
   const handleToastClose = useCallback(() => setShowToast(false), []);
+
+  if (loading) return null;
+
+  if (token) {
+    return <Navigate to="/projects" replace />;
+  }
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
@@ -27,7 +34,7 @@ export default function LoginPage() {
   const handleSubmit = (e) => {
     console.log("submit");
     e.preventDefault();
-    setLoading(true);
+    setLoadingMessage(true);
     auth(
       {
         username: username,
@@ -37,13 +44,13 @@ export default function LoginPage() {
         onSuccess: (auth) => {
           console.log("auth -> " + JSON.stringify(auth));
           localStorage.setItem("refresh", auth.refresh);
-          setLoading(false);
+          setLoadingMessage(false);
           login(auth.access);
           navigate("/projects");
         },
         onError: () => {
           setError("Login error. Please check your credentials.");
-          setLoading(false);
+          setLoadingMessage(false);
           setShowToast(true);
         },
       }
@@ -98,17 +105,17 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loadingMessage}
             className={`
             w-full py-2 rounded-md font-semibold text-white
             bg-gradient-to-r from-blue-500 to-cyan-500
             hover:from-blue-600 hover:to-cyan-600
             transition-all shadow-md hover:shadow-lg
             active:scale-[0.98]
-            ${loading ? "opacity-50 cursor-not-allowed" : ""}
+            ${loadingMessage ? "opacity-50 cursor-not-allowed" : ""}
             `}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loadingMessage ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
