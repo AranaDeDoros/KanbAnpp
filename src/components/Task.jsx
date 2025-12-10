@@ -92,7 +92,7 @@ export const Task = ({ user, task, stripHtml }) => {
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <DialogPanel className="mx-auto w-full max-w-lg rounded-xl bg-white p-5 shadow-xl">
               <DialogTitle className="text-lg font-semibold mb-3 flex justify-between">
-                <div class="flex gap-2 align-center justify-center items-center">
+                <div className="flex gap-2 align-center justify-center items-center">
                   {task.status === "done" && (
                     <CheckBadgeIcon className="size-6 text-green-500" />
                   )}

@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useCreateTask } from "../api/useCreateTask";
 import { CriteriaList } from "./CriteriaList";
 //import RichText from "./RichText";
 import { useUsers } from "../api/useUsers";
-import MembersSingleSelect from "../components/SingleSelect";
+//import MembersSingleSelect from "../components/SingleSelect";
 import { PaperClipIcon } from "@heroicons/react/24/solid";
+import ReactSelect from "./ReactSelect";
 
 export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const defaultObj = {
@@ -17,6 +18,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     acceptance_criteria: "",
     attachments: [], // not stored yet in backend
     assigned_to: null,
+    tags: [],
   };
   const [formData, setFormData] = useState(defaultObj);
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,28 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const [criteriaResetKey, setCriteriaResetKey] = useState(0);
   const { data: users, isLoading } = useUsers(token);
   const [assignedTo, setAssignedTo] = useState([]);
+  const [assignedTags, setAssignedTags] = useState([]);
+
+  const tagSelectMapper = useCallback(
+    (tag) => ({
+      value: tag.id,
+      label: tag.name,
+    }),
+    []
+  );
+
+  const userSelectMapper = useCallback(
+    (user) => ({
+      value: user.id,
+      label: user.username,
+    }),
+    []
+  );
+
+  const memberOptions = useMemo(() => {
+    if (!users) return [];
+    return users.map(userSelectMapper);
+  }, [users, userSelectMapper]);
 
   const [criteriaList, setCriteriaList] = useState([]);
   const handleCriteriaText = (items) => {
@@ -43,6 +67,49 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    if (criteriaList.length < 1) {
+      setError("Must add at least one criteria");
+      setLoading(false);
+      return;
+    }
+
+    const fd = new FormData();
+
+    fd.append("title", formData.title);
+    fd.append("description", formData.description);
+    fd.append("status", formData.status);
+    fd.append("project", formData.project);
+    fd.append("estimate_points", formData.estimate_points);
+    fd.append("priority", formData.priority);
+    fd.append(
+      "acceptance_criteria",
+      criteriaList.map((c) => c.value).join("\n")
+    );
+
+    if (formData.assigned_to) fd.append("assigned_to", formData.assigned_to);
+
+    for (const file of formData.attachments) {
+      fd.append("attachments", file);
+    }
+
+    createTask(fd, {
+      onSuccess: (newTask) => {
+        onTaskCreated?.(newTask);
+        setFormData(defaultObj);
+      },
+      onError: () => setError("Error creating task"),
+      onSettled: () => {
+        setLoading(false);
+        handleReset();
+      },
+    });
+  };
+
+  /* const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -78,7 +145,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         handleReset();
       },
     });
-  };
+  }; */
 
   const handleReset = () => {
     setCriteriaResetKey((prev) => prev + 1);
@@ -194,8 +261,8 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         <label className="block text-sm font-medium text-gray-700">
           Members
         </label>
-        <MembersSingleSelect
-          users={users}
+        <ReactSelect
+          catalog={memberOptions}
           isLoading={isLoading}
           value={assignedTo}
           onChange={(value) => {
@@ -206,6 +273,27 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
               assigned_to: Number(value?.value) || null,
             }));
           }}
+          placeholder="Add members..."
+          mapperFunc={userSelectMapper}
+        />
+      </div>
+
+      <div className="mb-1">
+        <label className="block text-sm font-medium text-gray-700">Tags</label>
+        <ReactSelect
+          catalog={[]}
+          isLoading={isLoading}
+          value={assignedTags}
+          onChange={(value) => {
+            console.log(value);
+            setAssignedTags(value);
+            setFormData((prev) => ({
+              ...prev,
+              tags: value.map((v) => v.value),
+            }));
+          }}
+          placeholder="Add tags..."
+          mapperFunc={tagSelectMapper}
         />
       </div>
 
