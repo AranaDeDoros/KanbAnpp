@@ -5,6 +5,8 @@ import { useCreateProject } from "../api/useCreateProject";
 import Toast from "../components/Toast";
 import { useUsers } from "../api/useUsers";
 import MembersMultiSelect from "../components/MultiSelect";
+import { useCallback, useMemo } from "react";
+import ReactSelect from "../components/ReactSelect";
 
 export default function CreateProjectPage() {
   const defaultObj = {
@@ -24,6 +26,21 @@ export default function CreateProjectPage() {
   const { mutate: createProject } = useCreateProject(token);
   const [showToast, setShowToast] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState([]);
+
+  const userSelectMapper = useCallback(
+    (user) => ({
+      value: user.id,
+      label: user.username,
+    }),
+    []
+  );
+
+  const memberOptions = useMemo(() => {
+    console.log(users,userSelectMapper,"<<")
+    if (!users) return [];
+    return users.map(userSelectMapper);
+  }, [users, userSelectMapper]);
+
 
   useEffect(() => {
     console.log("user changed in CreateProjectPage:", user);
@@ -120,8 +137,8 @@ export default function CreateProjectPage() {
               Users this will evenually show a list of users
             </option>
           </select> */}
-          <MembersMultiSelect
-            users={users}
+          <ReactSelect
+            catalog={memberOptions}
             isLoading={isLoading}
             value={selectedMembers}
             onChange={(values) => {
@@ -131,6 +148,9 @@ export default function CreateProjectPage() {
                 members: values.map((v) => v.value),
               }));
             }}
+            placeholder="Add users..."
+            isMulti={true}
+            mapperFunc={userSelectMapper}
           />
         </div>
 
