@@ -309,6 +309,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
 
         <input
           type="file"
+          key={fileInputKey}
           multiple
           accept=".pdf, .docx, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           id="file_attachments"
