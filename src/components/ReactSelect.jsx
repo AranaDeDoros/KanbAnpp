@@ -6,14 +6,13 @@ export default function ReactSelect({
   value,
   onChange,
   isLoading,
-  isMulti = false,
+  isMulti,
   placeholder,
   isCreateTable = false,
 }) {
-  return isCreateTable ? (
-    <CreatableSelect />
-  ) : (
-    <Select
+  const Component = isCreateTable ? CreatableSelect : Select;
+  return (
+    <Component
       options={catalog}
       value={value}
       onChange={onChange}

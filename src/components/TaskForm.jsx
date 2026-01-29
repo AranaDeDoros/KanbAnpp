@@ -17,7 +17,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     estimate_points: 1,
     priority: "regular",
     acceptance_criteria: "",
-    attachments: [], // not stored yet in backend
+    attachments: [],
     assigned_to: null,
     existingTags: [],
     newTags: [],
@@ -27,6 +27,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const [error, setError] = useState("");
   const { mutate: createTask } = useCreateTask(token);
   const [criteriaResetKey, setCriteriaResetKey] = useState(0);
+  const [fileInputKey, setFileInputKey] = useState(0);
   const { data: users, isLoading } = useUsers(token);
   const { data: tags } = useTags(token);
   const [assignedTo, setAssignedTo] = useState([]);
@@ -37,7 +38,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       value: tag.id,
       label: tag.name,
     }),
-    []
+    [],
   );
 
   const userSelectMapper = useCallback(
@@ -45,7 +46,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       value: user.id,
       label: user.username,
     }),
-    []
+    [],
   );
 
   const memberOptions = useMemo(() => {
@@ -95,7 +96,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     fd.append("priority", formData.priority);
     fd.append(
       "acceptance_criteria",
-      criteriaList.map((c) => c.value).join("\n")
+      criteriaList.map((c) => c.value).join("\n"),
     );
     fd.append("existingTags", JSON.stringify(formData.existingTags));
     fd.append("newTags", JSON.stringify(formData.newTags));
@@ -121,10 +122,11 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
 
   const handleReset = () => {
     setCriteriaResetKey((prev) => prev + 1);
+    setFileInputKey((prev) => prev + 1);
     setCriteriaList([]);
     setAssignedTo(null);
     setFormData(defaultObj);
-    setAssignedTags(null);
+    setAssignedTags([]);
   };
 
   return (
@@ -265,6 +267,9 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
               .filter((v) => !v.__isNew__)
               .map((v) => v.value);
 
+            console.log("Existing Tag IDs:", existingTagIds);
+            console.log("value", value);
+
             const newTagNames = value
               .filter((v) => v.__isNew__)
               .map((v) => v.label.toLowerCase());
@@ -277,6 +282,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           }}
           placeholder="Add tags..."
           mapperFunc={tagSelectMapper}
+          isMulti={true}
         />
       </div>
 

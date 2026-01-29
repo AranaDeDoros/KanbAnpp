@@ -202,7 +202,7 @@ export const Task = ({ user, task, stripHtml }) => {
                     hardBg[task.status]
                   } transition-colors`}
                 >
-                  Close
+                  Ok
                 </button>
               </div>
             </DialogPanel>
