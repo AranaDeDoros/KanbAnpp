@@ -20,6 +20,11 @@ import { useState } from "react";
 
 //striphtml might change into a utility function later idk
 export const Task = ({ user, task, stripHtml }) => {
+  const abbreviate = (text, maxLength) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + "...";
+  };
+
   const [open, setOpen] = useState(false);
   const bgColors = {
     done: "from-green-500 to-green-600",
@@ -168,7 +173,7 @@ export const Task = ({ user, task, stripHtml }) => {
                       href={att.file}
                       className="lowercase text-blue-600"
                     >
-                      {att.filename}
+                      {abbreviate(att.filename, 20)}
                     </a>
                   ))}
                 </div>
