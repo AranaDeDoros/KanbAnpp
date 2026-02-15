@@ -1,8 +1,7 @@
-// src/api/client.js
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api",
 });
 
 api.interceptors.request.use((config) => {
@@ -33,7 +32,7 @@ api.interceptors.response.use(
           "http://localhost:8000/api/auth/token/refresh/",
           {
             refresh,
-          }
+          },
         );
 
         const newAccess = res.data.access;
@@ -53,7 +52,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
