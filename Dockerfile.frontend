@@ -1,14 +1,13 @@
-# Build Stage
 FROM node:20 AS build
 
 WORKDIR /app
+ARG VITE_API_URL
 COPY package.json package-lock.json* ./
 RUN npm install
 
 COPY . .
 RUN npm run build
 
-# Serve with nginx
 FROM nginx:1.27-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 COPY docker/nginx.conf /etc/nginx/conf.d/frontend.conf
