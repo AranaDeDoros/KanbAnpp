@@ -74,7 +74,7 @@ export default function RegisterPage() {
 
   return (
     <>
-      <div className="flex h-130 items-center justify-center ">
+      <div className="flex items-center justify-center ">
         <form
           method="POST"
           onSubmit={handleSubmit}
