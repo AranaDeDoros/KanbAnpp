@@ -17,7 +17,7 @@ export default function KanbanBoard({ user, projectId }) {
   const [search, setSearch] = useState({ backlog: "", wip: "", done: "" });
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8000/ws/tasks/");
+    const socket = new WebSocket(`${import.meta.env.VITE_WS_URL}`);
 
     socket.onmessage = (event) => {
       handleOnMessage(event);
