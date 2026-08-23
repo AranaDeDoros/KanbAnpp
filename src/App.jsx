@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import {TokenProvider } from "./context/TokenProvider";
 import CreateProjectPage from "./pages/CreateProjectPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -19,6 +20,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         <Route
           path="/projects"
