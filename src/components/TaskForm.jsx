@@ -62,7 +62,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const [criteriaList, setCriteriaList] = useState([]);
   const handleCriteriaText = (items) => {
     setCriteriaList(items);
-    console.log(items.map((c) => c.value).join("\n"));
+    //console.log(items.map((c) => c.value).join("\n"));
   };
 
   useEffect(() => {

@@ -41,7 +41,7 @@ export default function LoginPage() {
       },
       {
         onSuccess: (auth) => {
-          console.log("auth -> " + JSON.stringify(auth));
+          //console.log("auth -> " + JSON.stringify(auth));
           localStorage.setItem("refresh", auth.refresh);
           setLoadingMessage(false);
           login(auth.access);

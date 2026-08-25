@@ -16,7 +16,7 @@ export default function ProjectsPage() {
     navigate("/projects/new");
   };
 
-  console.log(user);
+  //console.log(user);
 
   return (
     <div className="p-1">
