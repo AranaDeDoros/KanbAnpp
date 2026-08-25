@@ -18,7 +18,7 @@ export default function KanbanBoard({ user, projectId }) {
 
   useEffect(() => {
     const socket = new WebSocket(`${import.meta.env.VITE_WS_URL}`);
-
+    console.log('WS_URL:', import.meta.env.VITE_WS_URL);
     socket.onmessage = (event) => {
       handleOnMessage(event);
     };
