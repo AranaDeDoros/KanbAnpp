@@ -154,10 +154,10 @@ export default function KanbanBoard({ user, projectId }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-red/40" />
+            <div className="fixed inset-0 bg-black/40" />
           </Transition.Child>
 
-          <div className="fixed inset-0 flex items-center justify-center p-4">
+          <div className="fixed inset-0 overflow-y-auto p-4 sm:flex sm:items-center sm:justify-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-200"
@@ -167,25 +167,29 @@ export default function KanbanBoard({ user, projectId }) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg rounded-xl bg-white pb-4 shadow-xl">
-                <div className="flex justify-between items-center mb-4  bg-sky-600 text-white px-3 py-2 rounded-md w-full">
+              <Dialog.Panel className="my-4 w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-xl sm:my-0">
+                <div className="flex items-center justify-between bg-sky-600 px-3 py-2 text-white">
                   <Dialog.Title className="text-lg font-semibold">
                     Create Task
                   </Dialog.Title>
 
                   <button
-                    className="text-white-500 hover:text-sky-300"
+                    type="button"
+                    aria-label="Close create task dialog"
+                    className="text-white hover:text-sky-200"
                     onClick={() => setshowCreateForm(false)}
                   >
                     ✕
                   </button>
                 </div>
 
-                <CreateTaskForm
-                  token={token}
-                  onTaskCreated={handleTaskCreated}
-                  projectId={projectId}
-                />
+                <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto py-4">
+                  <CreateTaskForm
+                    token={token}
+                    onTaskCreated={handleTaskCreated}
+                    projectId={projectId}
+                  />
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -203,7 +207,8 @@ export default function KanbanBoard({ user, projectId }) {
       </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-3 gap-4 p-4 min-h-screen bg-gray-100">
+        <div className="min-h-screen overflow-x-auto bg-gray-100 p-4">
+          <div className="flex min-w-max gap-4">
           {Object.entries(columns).map(([key, items]) => (
             <Droppable droppableId={key} key={key}>
               {(provided, snapshot) => (
@@ -211,15 +216,16 @@ export default function KanbanBoard({ user, projectId }) {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   className={`
-                            rounded-xl overflow-hidden
+                            w-[80vw] min-w-72 max-w-sm shrink-0 overflow-hidden rounded-xl
+                            sm:w-80 lg:min-w-0 lg:max-w-none lg:flex-1
                             shadow-md
                             border border-gray-200
                             bg-white
-                            transition-all duration-300
+                            transition-shadow duration-200 ease-out
 
                             ${
-                              snapshot.isDragging
-                                ? "rotate-[1deg] scale-[1.02] shadow-xl"
+                              snapshot.isDraggingOver
+                                ? "shadow-xl"
                                 : ""
                             }
       `}
@@ -242,7 +248,7 @@ export default function KanbanBoard({ user, projectId }) {
                       className="
                                 block w-full border border-gray-200 rounded-md p-2 pl-9
                                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                bg-[#ddeef]
+                                bg-[#ddeeff]
                               "
                     />
                   </div>
@@ -269,13 +275,19 @@ export default function KanbanBoard({ user, projectId }) {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                               ref={provided.innerRef}
+                              style={{
+                                ...provided.draggableProps.style,
+                                transition: snapshot.isDropAnimating
+                                  ? "transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms ease-out"
+                                  : provided.draggableProps.style?.transition,
+                              }}
                               className={`
                                     rounded-xl overflow-hidden
                                     shadow-md
                                     border border-gray-200
                                     bg-white
 
-                                    transition-all duration-300
+                                    transition-shadow duration-200 ease-out
                                     ${
                                       snapshot.isDragging
                                         ? "shadow-xl"
@@ -283,7 +295,7 @@ export default function KanbanBoard({ user, projectId }) {
                                     }
                                     ${
                                       snapshot.isDragging
-                                        ? "rotate-[1deg] scale-[1.02] shadow-xl"
+                                        ? "shadow-xl ring-2 ring-sky-300"
                                         : ""
                                     }
       `}
@@ -305,6 +317,7 @@ export default function KanbanBoard({ user, projectId }) {
               )}
             </Droppable>
           ))}
+          </div>
         </div>
       </DragDropContext>
     </>
