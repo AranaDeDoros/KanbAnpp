@@ -154,10 +154,10 @@ export default function KanbanBoard({ user, projectId }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/40" />
+            <div className="fixed inset-0 bg-red/40" />
           </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto p-4 sm:flex sm:items-center sm:justify-center">
+          <div className="fixed inset-0 flex items-center justify-center p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-200"
@@ -167,29 +167,25 @@ export default function KanbanBoard({ user, projectId }) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="my-4 w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-xl sm:my-0">
-                <div className="flex items-center justify-between bg-sky-600 px-3 py-2 text-white">
+              <Dialog.Panel className="w-full max-w-lg rounded-xl bg-white pb-4 shadow-xl">
+                <div className="flex justify-between items-center mb-4  bg-sky-600 text-white px-3 py-2 rounded-md w-full">
                   <Dialog.Title className="text-lg font-semibold">
                     Create Task
                   </Dialog.Title>
 
                   <button
-                    type="button"
-                    aria-label="Close create task dialog"
-                    className="text-white hover:text-sky-200"
+                    className="text-white-500 hover:text-sky-300"
                     onClick={() => setshowCreateForm(false)}
                   >
                     ✕
                   </button>
                 </div>
 
-                <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto py-4">
-                  <CreateTaskForm
-                    token={token}
-                    onTaskCreated={handleTaskCreated}
-                    projectId={projectId}
-                  />
-                </div>
+                <CreateTaskForm
+                  token={token}
+                  onTaskCreated={handleTaskCreated}
+                  projectId={projectId}
+                />
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -207,8 +203,7 @@ export default function KanbanBoard({ user, projectId }) {
       </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="min-h-screen overflow-x-auto bg-gray-100 p-4">
-          <div className="flex min-w-max gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 min-h-screen bg-gray-100">
           {Object.entries(columns).map(([key, items]) => (
             <Droppable droppableId={key} key={key}>
               {(provided, snapshot) => (
@@ -216,45 +211,48 @@ export default function KanbanBoard({ user, projectId }) {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   className={`
-                            w-[80vw] min-w-72 max-w-sm shrink-0 overflow-hidden rounded-xl
-                            sm:w-80 lg:min-w-0 lg:max-w-none lg:flex-1
-                            shadow-md
-                            border border-gray-200
-                            bg-white
-                            transition-shadow duration-200 ease-out
-
-                            ${
-                              snapshot.isDraggingOver
-                                ? "shadow-xl"
-                                : ""
-                            }
-      `}
+                    rounded-xl overflow-hidden
+                    shadow-md border border-gray-200
+                    bg-white
+                    flex flex-col
+                    transition-colors duration-200
+                    ${snapshot.isDraggingOver ? "bg-indigo-50" : ""}
+                  `}
                 >
                   <div className="p-4 border-b font-bold text-gray-700 uppercase text-center bg-white sticky top-0 z-10">
                     {key}
                   </div>
+
                   <div className="relative w-full p-2">
                     <FunnelIcon
                       className="
-                                size-4 text-gray-400
-                                absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none
-                              "
+                        size-4 text-gray-400
+                        absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none
+                      "
                     />
-
                     <input
                       type="text"
                       placeholder="search"
                       onChange={(v) => handleSearch(v.target.value, key)}
                       className="
-                                block w-full border border-gray-200 rounded-md p-2 pl-9
-                                focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                                bg-[#ddeeff]
-                              "
+                        block w-full border border-gray-200 rounded-md p-2 pl-9
+                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                        bg-[#ddeef]
+                      "
                     />
                   </div>
 
-                  {/* scroll*/}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                  {/* cards: horizontal scroll on mobile, vertical stack on desktop */}
+                  <div
+                    className="
+                      flex flex-row md:flex-col
+                      gap-2
+                      overflow-x-auto md:overflow-x-visible
+                      md:overflow-y-auto
+                      p-4
+                      flex-1
+                    "
+                  >
                     {items
                       .filter((task) => {
                         const s = search[key];
@@ -277,36 +275,25 @@ export default function KanbanBoard({ user, projectId }) {
                               ref={provided.innerRef}
                               style={{
                                 ...provided.draggableProps.style,
-                                transition: snapshot.isDropAnimating
-                                  ? "transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms ease-out"
-                                  : provided.draggableProps.style?.transition,
                               }}
                               className={`
-                                    rounded-xl overflow-hidden
-                                    shadow-md
-                                    border border-gray-200
-                                    bg-white
-
-                                    transition-shadow duration-200 ease-out
-                                    ${
-                                      snapshot.isDragging
-                                        ? "shadow-xl"
-                                        : "shadow-md"
-                                    }
-                                    ${
-                                      snapshot.isDragging
-                                        ? "shadow-xl ring-2 ring-sky-300"
-                                        : ""
-                                    }
-      `}
+                                rounded-xl overflow-hidden
+                                border border-gray-200
+                                bg-white
+                                shrink-0 w-64 md:w-full
+                                transition-shadow transition-opacity duration-150 ease-out
+                                ${
+                                  snapshot.isDragging
+                                    ? "shadow-lg opacity-95"
+                                    : "shadow-md opacity-100"
+                                }
+                              `}
                             >
-                              {/* task */}
                               <Task
                                 task={task}
                                 user={task.assigned_to_user}
                                 stripHtml={stripHtml}
                               />
-                              {/* task */}
                             </div>
                           )}
                         </Draggable>
@@ -317,7 +304,6 @@ export default function KanbanBoard({ user, projectId }) {
               )}
             </Droppable>
           ))}
-          </div>
         </div>
       </DragDropContext>
     </>
